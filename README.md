@@ -14,7 +14,7 @@ unlocks full programmability, unparalleled performance, and seamless hardware po
     <img src="https://modular-assets.s3.amazonaws.com/images/modular_architecture_diagram_bg.png">
 </p>
 
-[See here to get started with MAX](https://docs.modular.com/engine/get-started)
+[See here to get started with MAX](https://docs.modular.com/max/get-started)
 and when you want to report issues or request features,
 [please create a GitHub issue here](https://github.com/modularml/max/issues/new/choose).
 
@@ -22,42 +22,46 @@ The [Discord](https://discord.gg/modular) community is the best place to share
 your experiences and chat with the team and other community members.
 
 In the [examples directory](https://github.com/modularml/max/tree/main/examples),
-you will find code examples for model inference, Jupyter notebooks for an
-interactive experience learning experience and instructions for how to work
-with benchmarking and visualization tooling.
+you will find code examples and Jupyter notebooks that show how to run inference
+with MAX.
 
 ## Getting Started
 
-1. Install the [MAX SDK](https://docs.modular.com/engine/get-started).
+MAX is available in both stable and nightly builds. To install either version,
+follow the guide to [create a project with
+Magic](https://docs.modular.com/max/create-project).
 
-2. Git clone the repository of MAX samples using the command below:
+Then clone this repository:
 
 ```bash
 git clone https://github.com/modularml/max.git
 ```
 
-## Running
+If you installed the nightly build, be sure you switch to the `nightly` branch,
+because the `main` branch is for stable releases and might not be compatible
+with nightly builds:
 
-### Option 1: Example console (excludes notebooks)
-
-Run the console and follow the prompt to choose which example to run.
-
-```sh
-python3 -m venv venv && source venv/bin/activate
-python3 -m pip install --find-links "$(modular config max.path)/wheels" max-engine
-python3 examples/console.py
+```bash
+git checkout nightly
 ```
 
-which opens up
+## Running
 
-<p align="center">
-    <img src="https://modular-assets.s3.amazonaws.com/images/modular_console_bg.png">
-</p>
+### MAX Pipelines
 
-### Option 2: Follow the README
+To show off the full power of MAX, a
+[series of end-to-end pipelines for common AI workloads](./examples/graph-api/pipelines/)
+(and more) are ready to run. As one example, this includes everything needed to
+self-host
+[the Llama 3 text-generation model](./examples/graph-api/pipelines/llama3/).
+These pipelines are completely written in Mojo, and all code is provided so
+that they can be customized, built upon, or learned from.
 
-Follow the instructions in the README for each example, notebook or tool
-you want to run.
+### Examples
+
+In addition to the end-to-end pipelines, there are many [examples](./examples/)
+that exercise various aspects of MAX. You can follow the instructions in the
+README for each example or notebook you want to run.
 
 ### Notebooks
 
@@ -66,26 +70,19 @@ Check out the [notebooks examples](./examples/notebooks/) for using MAX Engine
 
 - [Mistral-7B](./examples/notebooks/mistral7b-python-onnx.ipynb)
 - [Roberta-pytorch](./examples/notebooks/roberta-python-pytorch.ipynb)
-- [Roberta-tensorflow](./examples/notebooks/roberta-python-tensorflow.ipynb)
 
-### FAQ
+### Tutorials
 
-Q: I get `ModuleNotFoundError: No module named 'max'` when running an example?
+The [tutorials](./tutorials/) directory contains the "finished" code for
+tutorials you can read at
+[docs.modular.com/max/tutorials](https://docs.modular.com/max/tutorials).
 
-A: Please make sure you run
+### Docker Container
 
-```sh
-python3 -m pip install --find-links "$(modular config max.path)/wheels" max-engine
-```
+To deploy MAX on AWS, you can pull our Docker Container from the the public ECR here:
+[https://gallery.ecr.aws/modular/max-serving](https://gallery.ecr.aws/modular/max-serving)
 
-in your local python environment. Note that `max` can also be available in your `PATH`
-
-### MAX Serving Docker Container
-
-For MAX Serving, you can pull our Docker Container from the the public ECR here:
-[https://gallery.ecr.aws/modular/max-serving-de](https://gallery.ecr.aws/modular/max-serving-de)
-
-```public.ecr.aws/modular/max-serving-de```
+```public.ecr.aws/modular/max-serving```
 
 ## Contributing
 
@@ -101,9 +98,10 @@ the team and other community members.
 
 ## License
 
-The Mojo examples and notebooks in this repository are licensed
-under the Apache License v2.0 with LLVM Exceptions
-(see the LLVM [License](https://llvm.org/LICENSE.txt)).
+This repository and its contributions are licensed under the Apache License
+v2.0 with LLVM Exceptions (see the LLVM [License](https://llvm.org/LICENSE.txt)).
+MAX and Mojo usage and distribution are licensed under the
+[MAX & Mojo Community License](https://www.modular.com/legal/max-mojo-license).
 
 ### Third Party Licenses
 

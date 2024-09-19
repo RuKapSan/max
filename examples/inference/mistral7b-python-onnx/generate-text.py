@@ -13,22 +13,30 @@
 # ===----------------------------------------------------------------------=== #
 
 
-from max import engine
-
 import os
+
+from max import engine
 
 # suppress extraneous logging
 os.environ["TRANSFORMERS_VERBOSITY"] = "critical"
 
+import platform
 import signal
-import torch
 from argparse import ArgumentParser
+
+import torch
 from transformers import AutoTokenizer
 from transformers.generation.logits_process import LogitsProcessorList
 
 DEFAULT_MODEL_PATH = "../../models/minstral7b-onnx/model.onnx"
 DESCRIPTION = "Generate text given a prompt."
 HF_MODEL_NAME = "mistralai/Mistral-7B-v0.1"
+HUGGINGFACE_ERROR = """\nYou need to log into HuggingFace:
+    huggingface-cli login
+
+Then accept the terms to use Mistral:
+    https://huggingface.co/mistralai/Mistral-7B-v0.1
+"""
 
 # Number of tokens to generate
 N_TOKENS = 8
@@ -116,13 +124,23 @@ def main():
     )
     args = parser.parse_args()
 
+    # Improves model compilation speed dramatically on intel CPUs
+    if "Intel" in platform.processor():
+        os.environ["OMP_NUM_THREADS"] = "1"
+        os.environ["MKL_NUM_THREADS"] = "1"
+
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     torch.set_default_device("cpu")
 
     # Preprocess input statement
     print("Processing input...")
-    tokenizer = AutoTokenizer.from_pretrained(HF_MODEL_NAME)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(HF_MODEL_NAME)
+    except OSError:
+        print(HUGGINGFACE_ERROR)
+        exit(1)
+
     tokenizer.pad_token = tokenizer.eos_token
 
     input_ids = tokenizer(

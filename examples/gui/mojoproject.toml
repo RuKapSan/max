@@ -1,0 +1,45 @@
+[project]
+name = "gui"
+version = "1.0.0"
+channels = [ "conda-forge", "https://conda.modular.com/max/",]
+platforms = [ "osx-arm64", "linux-aarch64", "linux-64",]
+
+[dependencies]
+max = "*"
+chromadb = "*"
+llama-index = "*"
+
+[pypi-dependencies]
+accelerate = "*"
+diffusers = "*"
+docx2txt = "*"
+EbookLib = "*"
+fastembed = "*"
+ftfy = "*"
+gguf = "*"
+html2text = "*"
+huggingface_hub = "*"
+ipython = "*"
+nbconvert = "*"
+networkx = "*"
+onnxruntime = "*"
+onnxslim = "==0.1.32"
+openai = "*"
+opencv-python = "*"
+pillow = "*"
+protobuf = "*"
+sentencepiece = "*"
+streamlit = "*"
+streamlit-webrtc = "*"
+tokenizers = "*"
+torch = "==2.4.1"
+transformers = "*"
+ultralytics = "*"
+watchdog = "*"
+
+[tasks]
+gui = "streamlit run home.py"
+
+[pypi-dependencies.optimum]
+extras = [ "onnxruntime",]
+version = "==1.21.4"

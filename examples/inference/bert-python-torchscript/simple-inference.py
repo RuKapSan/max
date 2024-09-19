@@ -11,16 +11,16 @@
 # limitations under the License.
 # ===----------------------------------------------------------------------=== #
 
-from max import engine
-
-from argparse import ArgumentParser
-
-import signal
-import torch
-from transformers import BertTokenizer
-
 # suppress extraneous logging
 import os
+import platform
+import signal
+from argparse import ArgumentParser
+
+import torch
+from max import engine
+from max.dtype import DType
+from transformers import BertTokenizer
 
 os.environ["TRANSFORMERS_VERBOSITY"] = "critical"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -35,11 +35,10 @@ HF_MODEL_NAME = "bert-base-uncased"
 def execute(model_path, text, input_dict):
     session = engine.InferenceSession()
     input_spec_list = [
-        engine.TorchInputSpec(shape=tensor.size(), dtype=engine.DType.int64)
+        engine.TorchInputSpec(shape=tensor.size(), dtype=DType.int64)
         for tensor in input_dict.values()
     ]
-    options = engine.TorchLoadOptions(input_spec_list)
-    model = session.load(model_path, options)
+    model = session.load(model_path, input_specs=input_spec_list)
     tokenizer = BertTokenizer.from_pretrained(HF_MODEL_NAME)
     print("Processing input...")
     inputs = tokenizer(
@@ -81,6 +80,11 @@ def main():
         help="Directory for the downloaded model.",
     )
     args = parser.parse_args()
+
+    # Improves model compilation speed dramatically on intel CPUs
+    if "Intel" in platform.processor():
+        os.environ["OMP_NUM_THREADS"] = "1"
+        os.environ["MKL_NUM_THREADS"] = "1"
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
